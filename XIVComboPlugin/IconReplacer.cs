@@ -279,7 +279,7 @@ namespace XIVComboPlugin
 
             // Replace Requiescat with Confiteor when under the effect of Requiescat
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.PaladinRequiescatCombo))
-                if (actionID == PLD.Requiescat)
+                if (actionID == PLD.Requiescat || actionID == PLD.Imperator)
                 {
                     if (SearchBuffArray(PLD.BuffRequiescat) && level >= 80)
                         return iconHook.Original(self, PLD.Confiteor);
@@ -287,10 +287,7 @@ namespace XIVComboPlugin
                     if (SearchBuffArray(PLD.BuffBladeOfHonor)) 
                         return PLD.BladeOfHonor;
 
-                    if (level >= 96)
-                        return PLD.Imperator;
-
-                    return PLD.Requiescat;
+                    return iconHook.Original(self, actionID);
                 }
 
             // WARRIOR
