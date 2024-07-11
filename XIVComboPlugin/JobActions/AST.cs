@@ -3,6 +3,8 @@
     public static class AST
     {
         public const uint
+            Benefic = 3594,
+            Benefic2 = 3610,
             Play = 17055,
             Draw = 3590,
             Balance = 4401,

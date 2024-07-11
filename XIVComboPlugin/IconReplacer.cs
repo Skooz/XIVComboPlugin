@@ -645,6 +645,15 @@ namespace XIVComboPlugin
             */
 
             // ASTROLOGIAN
+
+            // Benefic II downgrades to Benefic when under lvl 30
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.AstrologianBeneficSync))
+                if (actionID == AST.Benefic2)
+                {
+                    if (level < 30) return AST.Benefic;
+                    return AST.Benefic2;
+                }
+
             /* Old Astro
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.AstrologianCardsOnDrawFeature))
                 if (actionID == AST.Play)
@@ -691,6 +700,14 @@ namespace XIVComboPlugin
 
             // SCHOLAR
 
+            // Adloquium downgrades to Physick when under lvl 30
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ScholarAdloquiumSync))
+                if (actionID == SCH.Adloquium)
+                {
+                    if (level < 30) return SCH.Physick;
+                    return SCH.Adloquium;
+                }
+
             // Change Fey Blessing into Consolation when Seraph is out.
             /*if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ScholarSeraphConsolationFeature))
                 if (actionID == SCH.FeyBless)
@@ -699,6 +716,7 @@ namespace XIVComboPlugin
                     return SCH.FeyBless;
                 }
             */
+
             // Change Energy Drain into Aetherflow when you have no more Aetherflow stacks.
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ScholarEnergyDrainFeature))
                 if (actionID == SCH.EnergyDrain)
@@ -769,6 +787,14 @@ namespace XIVComboPlugin
             }
 
             // WHM
+
+            // Cure 2 downgrades to Cure if below lvl 30
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.WhiteMageCureSync))
+                if (actionID == WHM.Cure2)
+                {
+                    if (level < 30) return WHM.Cure;
+                    return WHM.Cure2;
+                }
 
             // Replace Solace with Misery when full blood lily
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.WhiteMageSolaceMiseryFeature))

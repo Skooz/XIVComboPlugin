@@ -118,6 +118,9 @@ namespace XIVComboPlugin
         //BlackLeyLines = 1L << 28,
 
         // ASTROLOGIAN
+        [CustomComboInfo("Benefic II downgrade", "Replaces Benefic II with Benefic when under level 30", 33)]
+        AstrologianBeneficSync = 1L << 27,
+
         /* Old Astro
         [CustomComboInfo("Draw on Play", "Play turns into Draw when no card is drawn, as well as the usual Play behavior", 33)]
         AstrologianCardsOnDrawFeature = 1L << 27,
@@ -130,8 +133,11 @@ namespace XIVComboPlugin
 
         [CustomComboInfo("ES Painflare", "Change Painflare into Energy Syphon when out of Aetherflow stacks", 27)]
         SummonerESPainflareCombo = 1L << 40,
-        
+
         // SCHOLAR
+        [CustomComboInfo("Adloquium downgrade", "Replaces Adloquium with Physick when under level 30", 28)]
+        ScholarAdloquiumSync = 1L << 29,
+
         //[CustomComboInfo("Seraph Fey Blessing/Consolation", "Change Fey Blessing into Consolation when Seraph is out", 28)]
         //ScholarSeraphConsolationFeature = 1L << 29,
 
@@ -152,6 +158,9 @@ namespace XIVComboPlugin
         DancerDevilmentCombo = 1L << 61,
 
         // WHITE MAGE
+        [CustomComboInfo("Cure II downgrade", "Replaces Cure II with Cure when under level 30", 24)]
+        WhiteMageCureSync = 1L << 34,
+
         [CustomComboInfo("Solace into Misery", "Replaces Afflatus Solace with Afflatus Misery when Misery is ready to be used", 24)]
         WhiteMageSolaceMiseryFeature = 1L << 35,
 
