@@ -650,7 +650,7 @@ namespace XIVComboPlugin
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.AstrologianBeneficSync))
                 if (actionID == AST.Benefic2)
                 {
-                    if (level < 30) return AST.Benefic;
+                    if (level < 26) return AST.Benefic;
                     return AST.Benefic2;
                 }
 
