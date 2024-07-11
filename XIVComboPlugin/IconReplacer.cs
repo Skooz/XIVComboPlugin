@@ -853,6 +853,9 @@ namespace XIVComboPlugin
             {
                 if (actionID == RDM.Veraero2)
                 {
+                    // TODO: Ideally use GrandImpactReady buff ID instead of this, so we don't have to check level
+                    if (SearchBuffArray(RDM.BuffAcceleration) && level >= 96) return RDM.GrandImpact;
+
                     if (SearchBuffArray(RDM.BuffSwiftcast) || SearchBuffArray(RDM.BuffDualcast) || 
                         SearchBuffArray(RDM.BuffAcceleration) || SearchBuffArray(RDM.BuffChainspell))
                     {
@@ -864,6 +867,9 @@ namespace XIVComboPlugin
 
                 if (actionID == RDM.Verthunder2)
                 {
+                    // TODO: Ideally use GrandImpactReady buff ID instead of this, so we don't have to check level
+                    if (SearchBuffArray(RDM.BuffAcceleration) && level >= 96) return RDM.GrandImpact;
+
                     if (SearchBuffArray(RDM.BuffSwiftcast) || SearchBuffArray(RDM.BuffDualcast) ||
                         SearchBuffArray(RDM.BuffAcceleration) || SearchBuffArray(RDM.BuffChainspell))
                     {
@@ -905,6 +911,9 @@ namespace XIVComboPlugin
                     if (level >= 80 && (lastMove == RDM.Verflare || lastMove == RDM.Verholy)) return RDM.Scorch;
                     if (level >= 90 && lastMove == RDM.Scorch) return RDM.Resolution;
 
+                    // TODO: Ideally use GrandImpactReady buff ID instead of this, so we don't have to check level
+                    if (SearchBuffArray(RDM.BuffAcceleration) && level >= 96) return RDM.GrandImpact;
+
                     if (SearchBuffArray(RDM.BuffVerstoneReady)) return RDM.Verstone;
                     if (level < 62) return RDM.Jolt;
                     if (level < 84) return RDM.Jolt2;
@@ -914,6 +923,9 @@ namespace XIVComboPlugin
                 {
                     if (level >= 80 && (lastMove == RDM.Verflare || lastMove == RDM.Verholy)) return RDM.Scorch;
                     if (level >= 90 && lastMove == RDM.Scorch) return RDM.Resolution;
+
+                    // TODO: Ideally use GrandImpactReady buff ID instead of this, so we don't have to check level
+                    if (SearchBuffArray(RDM.BuffAcceleration) && level >= 96) return RDM.GrandImpact;
 
                     if (SearchBuffArray(RDM.BuffVerfireReady)) return RDM.Verfire;
                     if (level < 62) return RDM.Jolt;
