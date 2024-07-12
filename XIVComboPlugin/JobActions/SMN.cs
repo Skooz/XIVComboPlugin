@@ -41,14 +41,19 @@ namespace XIVComboPlugin.JobActions
             // Change Fester into Energy Drain
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.SummonerEDFesterCombo))
             {
-                if (actionID == Fester || (actionID == Necrotize && level >= 92))
+                if (actionID is Fester or Necrotize)
                 {
                     if (!Gauge.HasAetherflowStacks)
                     {
                         return EnergyDrain;
                     }
-                    
-                    return actionID;
+
+                    if (level >= 92)
+                    {
+                        return Necrotize;
+                    }
+
+                    return Fester;
                 }
             }
 
