@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Plugin.Services;
 
 namespace XIVComboPlugin.JobActions
 {
-    public static class MNK
+    public class MNK : JobBase
     {
-        public const uint
-            AOTD = 62,
-            FourPointFury = 16473,
-            Rockbreaker = 70;
+        public override string JobDisplayName => "Monk";
+        public override uint JobID => JobIDs.MNK;
+        
+        public MNK(IClientState state, XIVComboConfiguration config, IJobGauges gauges, IPluginLog log) : base(state, config, gauges, log)
+        {
+        }
     }
 }

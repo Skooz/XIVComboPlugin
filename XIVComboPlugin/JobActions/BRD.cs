@@ -1,7 +1,14 @@
-﻿namespace XIVComboPlugin.JobActions
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Hooking;
+using Dalamud.Plugin.Services;
+
+namespace XIVComboPlugin.JobActions
 {
-    public static class BRD
+    public class BRD : JobBase
     {
+        public override string JobDisplayName { get; }
+        public override uint JobID { get; }
+
         public const uint
             WanderersMinuet = 3559,
             PitchPerfect = 7404,
@@ -17,5 +24,61 @@
         public const ushort
             BuffHawksEye = 3861,
             BuffBarrage = 128;
+
+        public BRD(IClientState state, XIVComboConfiguration config, IJobGauges gauges, IPluginLog log) : base(state, config, gauges, log)
+        {
+        }
+
+        public override ulong IconDetour(Hook<IconReplacer.OnGetIconDelegate> iconHook, byte self, uint actionID)
+        {
+            // Replace HS/BS with SS/RA when procced.
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.BardStraightShotUpgradeFeature))
+            {
+                if (actionID is HeavyShot or BurstShot)
+                {
+                    if (HasBuff(BuffHawksEye) || HasBuff(BuffBarrage))
+                    {
+                        if (level >= 70)
+                        {
+                            return RefulgentArrow;
+                        }
+                        
+                        return StraightShot;
+                    }
+
+                    if (level >= 76)
+                    {
+                        return BurstShot;
+                    }
+                    
+                    return HeavyShot;
+                }
+            }
+
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.BardAoEUpgradeFeature))
+            {
+                if (actionID is QuickNock or Ladonsbite)
+                {
+                    if (HasBuff(BuffHawksEye) || HasBuff(BuffBarrage))
+                    {
+                        if (level >= 72)
+                        {
+                            return Shadowbite;
+                        }
+                        
+                        return WideVolley;
+                    }
+
+                    if (level >= 82)
+                    {
+                        return Ladonsbite;
+                    }
+                    
+                    return QuickNock;
+                }
+            }
+
+            return actionID;
+        }
     }
 }
