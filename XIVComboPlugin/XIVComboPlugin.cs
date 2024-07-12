@@ -1,14 +1,18 @@
-﻿using Dalamud.Game.Command;
+using Dalamud.Game.Command;
 using Dalamud.Plugin;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using ImGuiNET;
 using Dalamud.Game;
 using Dalamud.Utility;
 using System.Diagnostics;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Plugin.Services;
 using Dalamud.Interface.Utility;
+using XIVComboPlugin.JobActions;
 
 namespace XIVComboPlugin
 {
@@ -30,6 +34,8 @@ namespace XIVComboPlugin
         private IGameInteropProvider HookProvider { get; init; }
         private IPluginLog PluginLog { get; init; }
 
+        private static Dictionary<uint, JobBase> jobCollection;
+
         public XIVComboPlugin(IClientState clientState, ICommandManager commandManager, IDataManager manager, IDalamudPluginInterface pluginInterface, ISigScanner sigScanner, IJobGauges jobGauges, IChatGui chatGui, IGameInteropProvider gameInteropProvider, IPluginLog pluginLog)
         {
             ClientState = clientState;
@@ -47,73 +53,26 @@ namespace XIVComboPlugin
                 ShowInHelp = true
             });
 
-            this.Configuration = PluginInterface.GetPluginConfig() as XIVComboConfiguration ?? new XIVComboConfiguration();
+            Configuration = PluginInterface.GetPluginConfig() as XIVComboConfiguration ?? new XIVComboConfiguration();
             if (Configuration.Version < 4)
             {
                 Configuration.Version = 4;
             }
 
-            this.iconReplacer = new IconReplacer(TargetModuleScanner, ClientState, manager, this.Configuration, HookProvider, JobGauges, PluginLog);
-
-            this.iconReplacer.Enable();
+            SetupJobs();
+            
+            iconReplacer = new IconReplacer(TargetModuleScanner, ClientState, HookProvider, PluginLog);
+            iconReplacer.Enable();
 
             PluginInterface.UiBuilder.OpenConfigUi += () => isImguiComboSetupOpen = true;
             PluginInterface.UiBuilder.Draw += UiBuilder_OnBuildUi;
 
-            var values = Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>();
+            IEnumerable<CustomComboPreset> values = Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>();
             orderedByClassJob = values.Where(x => x != CustomComboPreset.None && x.GetAttribute<CustomComboInfoAttribute>() != null).OrderBy(x => x.GetAttribute<CustomComboInfoAttribute>().ClassJob).ToArray();
             UpdateConfig();
         }
 
         private bool isImguiComboSetupOpen = false;
-
-        private string ClassJobToName(byte key)
-        {
-            switch (key)
-            {
-                default: return "Unknown";
-                case 1: return "Gladiator";
-                case 2: return "Pugilist";
-                case 3: return "Marauder";
-                case 4: return "Lancer";
-                case 5: return "Archer";
-                case 6: return "Conjurer";
-                case 7: return "Thaumaturge";
-                case 8: return "Carpenter";
-                case 9: return "Blacksmith";
-                case 10: return "Armorer";
-                case 11: return "Goldsmith";
-                case 12: return "Leatherworker";
-                case 13: return "Weaver";
-                case 14: return "Alchemist";
-                case 15: return "Culinarian";
-                case 16: return "Miner";
-                case 17: return "Botanist";
-                case 18: return "Fisher";
-                case 19: return "Paladin";
-                case 20: return "Monk";
-                case 21: return "Warrior";
-                case 22: return "Dragoon";
-                case 23: return "Bard";
-                case 24: return "White Mage";
-                case 25: return "Black Mage";
-                case 26: return "Arcanist";
-                case 27: return "Summoner";
-                case 28: return "Scholar";
-                case 29: return "Rogue";
-                case 30: return "Ninja";
-                case 31: return "Machinist";
-                case 32: return "Dark Knight";
-                case 33: return "Astrologian";
-                case 34: return "Samurai";
-                case 35: return "Red Mage";
-                case 36: return "Blue Mage";
-                case 37: return "Gunbreaker";
-                case 38: return "Dancer";
-                case 39: return "Reaper";
-                case 40: return "Sage";
-            }
-        }
 
         private void UpdateConfig()
         {
@@ -122,11 +81,11 @@ namespace XIVComboPlugin
 
         private void UiBuilder_OnBuildUi()
         {
-
             if (!isImguiComboSetupOpen)
                 return;
-            var flagsSelected = new bool[orderedByClassJob.Length];
-            for (var i = 0; i < orderedByClassJob.Length; i++)
+            
+            bool[] flagsSelected = new bool[orderedByClassJob.Length];
+            for (int i = 0; i < orderedByClassJob.Length; i++)
             {
                 flagsSelected[i] = Configuration.ComboPresets.HasFlag(orderedByClassJob[i]);
             }
@@ -142,16 +101,19 @@ namespace XIVComboPlugin
 
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 5));
 
-            var lastClassJob = 0;
+            uint lastClassJob = 0;
 
-            for (var i = 0; i < orderedByClassJob.Length; i++)
+            for (int i = 0; i < orderedByClassJob.Length; i++)
             {
-                var flag = orderedByClassJob[i];
-                var flagInfo = flag.GetAttribute<CustomComboInfoAttribute>();
+                CustomComboPreset flag = orderedByClassJob[i];
+                CustomComboInfoAttribute flagInfo = flag.GetAttribute<CustomComboInfoAttribute>();
                 if (lastClassJob != flagInfo.ClassJob)
                 {
                     lastClassJob = flagInfo.ClassJob;
-                    if (ImGui.CollapsingHeader(ClassJobToName((byte)lastClassJob)))
+                    JobBase job = GetJob(lastClassJob);
+                    if (job == null) continue;
+                    
+                    if (ImGui.CollapsingHeader(job.JobDisplayName))
                     {
                         for (int j = i; j < orderedByClassJob.Length; j++)
                         {
@@ -161,15 +123,14 @@ namespace XIVComboPlugin
                             {
                                 break;
                             }
+                            
                             ImGui.PushItemWidth(200);
                             ImGui.Checkbox(flagInfo.FancyName, ref flagsSelected[j]);
                             ImGui.PopItemWidth();
                             ImGui.TextColored(new Vector4(0.68f, 0.68f, 0.68f, 1.0f), $"#{j+1}: " + flagInfo.Description);
                             ImGui.Spacing();
                         }
-                        
                     }
-                    
                 }
             }
 
@@ -186,7 +147,7 @@ namespace XIVComboPlugin
                 }
             }
 
-            for (var i = 0; i < orderedByClassJob.Length; i++)
+            for (int i = 0; i < orderedByClassJob.Length; i++)
             {
                 if (flagsSelected[i])
                 {
@@ -212,7 +173,7 @@ namespace XIVComboPlugin
             if (ImGui.Button("Save and Close"))
             {
                 PluginInterface.SavePluginConfig(Configuration);
-                this.isImguiComboSetupOpen = false;
+                isImguiComboSetupOpen = false;
                 UpdateConfig();
             }
 
@@ -221,7 +182,7 @@ namespace XIVComboPlugin
 
         public void Dispose()
         {
-            this.iconReplacer.Dispose();
+            iconReplacer.Dispose();
 
             CommandManager.RemoveHandler("/pcombo");
 
@@ -230,18 +191,18 @@ namespace XIVComboPlugin
 
         private void OnCommandDebugCombo(string command, string arguments)
         {
-            var argumentsParts = arguments.Split();
+            string[] argumentsParts = arguments.Split();
 
             switch (argumentsParts[0])
             {
                 case "setall":
                     {
-                        foreach (var value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>())
+                        foreach (CustomComboPreset value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>())
                         {
                             if (value == CustomComboPreset.None)
                                 continue;
 
-                            this.Configuration.ComboPresets |= value;
+                            Configuration.ComboPresets |= value;
                         }
 
                         ChatGui.Print("all SET");
@@ -249,9 +210,9 @@ namespace XIVComboPlugin
                     break;
                 case "unsetall":
                     {
-                        foreach (var value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>())
+                        foreach (CustomComboPreset value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>())
                         {
-                            this.Configuration.ComboPresets &= value;
+                            Configuration.ComboPresets &= value;
                         }
 
                         ChatGui.Print("all UNSET");
@@ -259,46 +220,46 @@ namespace XIVComboPlugin
                     break;
                 case "set":
                     {
-                        foreach (var value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>())
+                        foreach (CustomComboPreset value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>())
                         {
                             if (value.ToString().ToLower() != argumentsParts[1].ToLower())
                                 continue;
 
-                            this.Configuration.ComboPresets |= value;
+                            Configuration.ComboPresets |= value;
                         }
                     }
                     break;
                 case "toggle":
                     {
-                        foreach (var value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>())
+                        foreach (CustomComboPreset value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>())
                         {
                             if (value.ToString().ToLower() != argumentsParts[1].ToLower())
                                 continue;
 
-                            this.Configuration.ComboPresets ^= value;
+                            Configuration.ComboPresets ^= value;
                         }
                     }
                     break;
 
                 case "unset":
                     {
-                        foreach (var value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>())
+                        foreach (CustomComboPreset value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>())
                         {
                             if (value.ToString().ToLower() != argumentsParts[1].ToLower())
                                 continue;
 
-                            this.Configuration.ComboPresets &= ~value;
+                            Configuration.ComboPresets &= ~value;
                         }
                     }
                     break;
 
                 case "list":
                     {
-                        foreach (var value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>().Where(x => x != CustomComboPreset.None))
+                        foreach (CustomComboPreset value in Enum.GetValues(typeof(CustomComboPreset)).Cast<CustomComboPreset>().Where(x => x != CustomComboPreset.None))
                         {
                             if (argumentsParts[1].ToLower() == "set")
                             {
-                                if (this.Configuration.ComboPresets.HasFlag(value))
+                                if (Configuration.ComboPresets.HasFlag(value))
                                     ChatGui.Print(value.ToString());
                             }
                             else if (argumentsParts[1].ToLower() == "all")
@@ -308,11 +269,26 @@ namespace XIVComboPlugin
                     break;
 
                 default:
-                    this.isImguiComboSetupOpen = true;
+                    isImguiComboSetupOpen = true;
                     break;
             }
 
-            PluginInterface.SavePluginConfig(this.Configuration);
+            PluginInterface.SavePluginConfig(Configuration);
         }
+
+        private void SetupJobs()
+        {
+            jobCollection = new Dictionary<uint, JobBase>();
+            
+            IEnumerable<Type> types = typeof(JobBase).Assembly.GetTypes().Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(JobBase)));
+            foreach (Type type in types)
+            {
+                if (Activator.CreateInstance(type, [ClientState, Configuration, JobGauges, PluginLog]) is not JobBase instance) continue;
+                
+                jobCollection.TryAdd(instance.JobID, instance);
+            }
+        }
+
+        public static JobBase GetJob(uint jobID) => jobCollection.GetValueOrDefault(jobID);
     }
 }
