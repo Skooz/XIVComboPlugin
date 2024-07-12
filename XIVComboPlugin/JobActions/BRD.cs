@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Hooking;
 using Dalamud.Plugin.Services;
 
@@ -6,8 +6,8 @@ namespace XIVComboPlugin.JobActions
 {
     public class BRD : JobBase
     {
-        public override string JobDisplayName { get; }
-        public override uint JobID { get; }
+        public override string JobDisplayName => "Bard";
+        public override uint JobID => JobIDs.BRD;
 
         public const uint
             WanderersMinuet = 3559,

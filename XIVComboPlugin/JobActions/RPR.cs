@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Hooking;
 using Dalamud.Plugin.Services;
 
@@ -6,8 +6,8 @@ namespace XIVComboPlugin.JobActions
 {
     public class RPR : JobBase
     {
-        public override string JobDisplayName { get; }
-        public override uint JobID { get; }
+        public override string JobDisplayName => "Reaper";
+        public override uint JobID => JobIDs.RPR;
 
         public const uint
             // Single Target
