@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Dalamud.Game.ClientState.JobGauge.Types;
@@ -21,8 +21,25 @@ public abstract class JobBase
     protected static IntPtr lastComboMove;
     protected static IntPtr comboTimer;
 
-    protected int lastMove => Marshal.ReadInt32(lastComboMove);
-    protected float comboTime => Marshal.PtrToStructure<float>(comboTimer);
+    protected int lastMove
+    {
+        get
+        {
+            if (lastComboMove == IntPtr.Zero) return 0;
+            
+            return Marshal.ReadInt32(lastComboMove);
+    }
+        }
+            
+    protected float comboTime
+    {
+        get
+        {
+            if (comboTimer == IntPtr.Zero) return 0;
+            return Marshal.PtrToStructure<float>(comboTimer);
+        }
+    }
+
     protected byte level => clientState.LocalPlayer.Level;
 
     public JobBase(IClientState state, XIVComboConfiguration config, IJobGauges gauges, IPluginLog log)
