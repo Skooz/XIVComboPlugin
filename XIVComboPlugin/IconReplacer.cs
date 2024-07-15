@@ -705,7 +705,7 @@ namespace XIVComboPlugin
                 if (actionID == SCH.Adloquium)
                 {
                     if (level < 30) return SCH.Physick;
-                    return SCH.Adloquium;
+                    //return SCH.Adloquium;
                 }
 
             // Change Fey Blessing into Consolation when Seraph is out.
