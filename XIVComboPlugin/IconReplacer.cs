@@ -848,22 +848,22 @@ namespace XIVComboPlugin
             {
                 var gauge = JobGauges.Get<MNKGauge>();
 
-                if (actionID == MNK.Bootshine)
+                if (actionID == MNK.Bootshine || actionID == MNK.LeapingOpo)
                 {
                     if (gauge.OpoOpoFury < 1 && level >= 50) return MNK.DragonKick;
-                    return MNK.Bootshine;
+                    return actionID;
                 }
 
-                if (actionID == MNK.TrueStrike)
+                if (actionID == MNK.TrueStrike || actionID == MNK.RisingRaptor)
                 {
                     if (gauge.RaptorFury < 1 && level >= 18) return MNK.TwinSnakes;
-                    return MNK.TrueStrike;
+                    return actionID;
                 }
 
-                if (actionID == MNK.SnapPunch)
+                if (actionID == MNK.SnapPunch || actionID == MNK.PouncingCoeurl)
                 {
                     if (gauge.CoeurlFury < 1 && level >= 30) return MNK.Demolish;
-                    return MNK.SnapPunch;
+                    return actionID;
                 }
             }
 
