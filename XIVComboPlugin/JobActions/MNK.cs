@@ -14,9 +14,6 @@ namespace XIVComboPlugin.JobActions
             SnapPunch = 56,
             DragonKick = 74,
             TwinSnakes = 61,
-            Demolish = 66,
-            LeapingOpo = 36945,
-            RisingRaptor = 36946,
-            PouncingCoeurl = 36947;
+            Demolish = 66;
     }
 }
