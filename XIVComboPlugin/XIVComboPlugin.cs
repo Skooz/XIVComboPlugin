@@ -173,6 +173,7 @@ namespace XIVComboPlugin
                 }
             }
 
+            /*
             if (ImGui.CollapsingHeader("Monk"))
             {
                 ImGui.Text("Not happening.");
@@ -185,6 +186,7 @@ namespace XIVComboPlugin
                     });
                 }
             }
+            */
 
             for (var i = 0; i < orderedByClassJob.Length; i++)
             {
