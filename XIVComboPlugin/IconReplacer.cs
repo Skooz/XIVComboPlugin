@@ -873,8 +873,7 @@ namespace XIVComboPlugin
 
                 if (actionID == MNK.MasterfulBlitz)
                 {
-                    if (gauge.BlitzTimeRemaining <= 0) return MNK.PerfectBalance;
-                    
+                    if (gauge.BlitzTimeRemaining <= 0 || level < 60) return MNK.PerfectBalance;
                 }
             }
 
