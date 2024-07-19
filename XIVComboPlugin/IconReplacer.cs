@@ -867,11 +867,9 @@ namespace XIVComboPlugin
 
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.MonkPerfectBlitz))
             {
-                var gauge = JobGauges.Get<MNKGauge>();
-
                 if (actionID == MNK.MasterfulBlitz)
                 {
-                    if (gauge.BlitzTimeRemaining <= 0 || level < 60) return MNK.PerfectBalance;
+                    if (JobGauges.Get<MNKGauge>().BlitzTimeRemaining <= 0 || level < 60) return MNK.PerfectBalance;
                 }
             }
 
