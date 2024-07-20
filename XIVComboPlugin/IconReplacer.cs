@@ -284,9 +284,6 @@ namespace XIVComboPlugin
                     if (SearchBuffArray(PLD.BuffRequiescat) && level >= 80)
                         return iconHook.Original(self, PLD.Confiteor);
 
-                    if (SearchBuffArray(PLD.BuffBladeOfHonor)) 
-                        return PLD.BladeOfHonor;
-
                     return iconHook.Original(self, actionID);
                 }
 

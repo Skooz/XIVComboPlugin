@@ -15,12 +15,10 @@
             BladeOfFaith = 25748,
             BladeOfTruth = 25749,
             BladeOfValor = 25750,
-            Imperator = 36921,
-            BladeOfHonor = 36922;
+            Imperator = 36921;
 
         public const ushort
             BuffRequiescat = 1368,
             BuffBladeOfFaithReady = 3019,
-            BuffBladeOfHonor = 3831;
     }
 }
