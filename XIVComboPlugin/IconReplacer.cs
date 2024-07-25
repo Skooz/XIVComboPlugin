@@ -828,7 +828,7 @@ namespace XIVComboPlugin
                     return PCT.StarryMotif;
                 }
             }
-            
+
             //VIPER
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLegacyCombo))
             {
@@ -839,26 +839,25 @@ namespace XIVComboPlugin
                     {
                         case VPR.SteelFangs:
                         case VPR.SteelMaw:
-                            if ((int)gauge.SerpentCombo == 3)
+                            if (gauge.SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.FIRSTLEGACY)
                                 return VPR.FirstLegacy;
                             return iconHook.Original(self, actionID);
 
                         case VPR.DreadFangs:
                         case VPR.DreadMaw:
-                            if ((int)gauge.SerpentCombo == 4)
-                                if (iconHook.Original(self, VPR.SerpentsTail) == VPR.SecondLegacy)
-                                    return VPR.SecondLegacy;
+                            if (gauge.SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.SECONDLEGACY)
+                                return VPR.SecondLegacy;
                             return iconHook.Original(self, actionID);
 
                         case VPR.HuntersCoil:
                         case VPR.HuntersDen:
-                            if ((int)gauge.SerpentCombo == 5)
+                            if (gauge.SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.THIRDLEGACY)
                                 return VPR.ThirdLegacy;
                             return iconHook.Original(self, actionID);
 
                         case VPR.SwiftskinsCoil:
                         case VPR.SwiftskinsDen:
-                            if ((int)gauge.SerpentCombo == 6)
+                            if (gauge.SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.FOURTHLEGACY)
                                 return VPR.FourthLegacy;
                             return iconHook.Original(self, actionID);
                     }
