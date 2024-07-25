@@ -198,13 +198,13 @@ namespace XIVComboPlugin
 
         [CustomComboInfo("Holy White to Comet Black", "Replace Holy in White with Comet in Black when Monochrome Tones is active", 42)]
         PictoHolyWhiteCombo = 1L << 5,
-        
+
         //Viper
-        [CustomComboInfo("Death Rattle Finisher", "Replace Steel Fangs/Dread Fangs with Death Rattle when available", 41)]
-        ViperDeathRattleCombo = 1L << 46,
-        
-        [CustomComboInfo("Last Lash Finisher", "Replace Steel Maw/Dread Maw with Last Lash when available", 41)]
-        ViperLastLashCombo = 1L << 50,
+        [CustomComboInfo("Death Rattle/Last Lash Finisher", "Replace moves with Death Rattle or Last Lash when available", 41)]
+        ViperDeathLashCombo = 1L << 46,
+
+        [CustomComboInfo("Twinfang/Twinblood", "Replace actions with their respective Twinfang/Twinblood moves when available", 41)]
+        ViperTwinsCombo = 1L << 50,
         
         [CustomComboInfo("Generational Legacy", "Legacy moves replace Generation moves when usable", 41)]
         ViperLegacyCombo = 1L << 51,

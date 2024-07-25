@@ -187,7 +187,7 @@ namespace XIVComboPlugin
                 {
                     if (lastMove == PLD.FastBlade && level >= 4)
                         return PLD.RiotBlade;
-                    if (lastMove == PLD.RiotBlade)
+                    if (lastMove == PLD.RiotBlade && level >= 26)
                         return iconHook.Original(self, PLD.RageOfHalone);
                     return PLD.FastBlade;
                 }
@@ -696,6 +696,7 @@ namespace XIVComboPlugin
             {
                 if (actionID == RDM.Verstone)
                 {
+                    if (SearchBuffArray(RDM.BuffGrandImpactReady)) return iconHook.Original(self, RDM.Jolt);
                     if (level >= 80 && (lastMove == RDM.Verflare || lastMove == RDM.Verholy)) return RDM.Scorch;
                     if (level >= 90 && lastMove == RDM.Scorch) return RDM.Resolution;
                     if (SearchBuffArray(RDM.BuffVerstoneReady)) return RDM.Verstone;
@@ -703,6 +704,7 @@ namespace XIVComboPlugin
                 }
                 if (actionID == RDM.Verfire)
                 {
+                    if (SearchBuffArray(RDM.BuffGrandImpactReady)) return iconHook.Original(self, RDM.Jolt);
                     if (level >= 80 && (lastMove == RDM.Verflare || lastMove == RDM.Verholy)) return RDM.Scorch;
                     if (level >= 90 && lastMove == RDM.Scorch) return RDM.Resolution;
                     if (SearchBuffArray(RDM.BuffVerfireReady)) return RDM.Verfire;
@@ -828,49 +830,85 @@ namespace XIVComboPlugin
             }
             
             //VIPER
-            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperDeathRattleCombo))
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperDeathLashCombo))
             {
                 if (actionID == VPR.SteelFangs || actionID == VPR.DreadFangs)
                     if (iconHook.Original(self, VPR.SerpentsTail) == VPR.DeathRattle)
                         return VPR.DeathRattle;
-            }
-
-            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLastLashCombo))
-            {
 
                 if (actionID == VPR.DreadMaw || actionID == VPR.SteelMaw)
                     if (iconHook.Original(self, VPR.SerpentsTail) == VPR.LastLash)
                         return VPR.LastLash;
             }
 
-            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLegacyCombo))
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperTwinsCombo))
             {
+                if (actionID == VPR.UncoiledFury)
+                {
+                    if (JobGauges.Get<VPRGauge>().RattlingCoilStacks > 0)
+                    {
+                        if (SearchBuffArray(VPR.Buffs.PoisedForTwinfang))
+                            return iconHook.Original(self, VPR.Twinfang);
+                        if (SearchBuffArray(VPR.Buffs.PoisedForTwinblood))
+                            return iconHook.Original(self, VPR.Twinblood);
+                        return iconHook.Original(self, actionID);
+                    }
+                }
+
                 switch (actionID)
                 {
-                    case VPR.SteelFangs:
-                    case VPR.SteelMaw:
-                        if (lastMove == VPR.FirstGeneration)
-                            return VPR.FirstLegacy;
-                        return iconHook.Original(self, actionID);
-
-                    case VPR.DreadFangs:
-                    case VPR.DreadMaw:
-                        if (lastMove == VPR.SecondGeneration)
-                            return VPR.SecondLegacy;
+                    case VPR.SwiftskinsCoil:
+                        if (iconHook.Original(self, VPR.Twinblood) == VPR.TwinbloodBite)
+                            return iconHook.Original(self, VPR.Twinblood);
                         return iconHook.Original(self, actionID);
 
                     case VPR.HuntersCoil:
-                    case VPR.HuntersDen:
-                        if (lastMove == VPR.ThirdGeneration)
-                            return VPR.ThirdLegacy;
+                        if (iconHook.Original(self, VPR.Twinfang) == VPR.TwinfangBite)
+                            return iconHook.Original(self, VPR.Twinfang);
                         return iconHook.Original(self, actionID);
 
-                    case VPR.SwiftskinsCoil:
                     case VPR.SwiftskinsDen:
-                        if (lastMove == VPR.FourthGeneration)
-                            return VPR.FourthLegacy;
+                        if (iconHook.Original(self, VPR.Twinblood) == VPR.TwinbloodThresh)
+                            return iconHook.Original(self, VPR.Twinblood);
+                        return iconHook.Original(self, actionID);
+
+                    case VPR.HuntersDen:
+                        if (iconHook.Original(self, VPR.Twinfang) == VPR.TwinfangThresh)
+                            return iconHook.Original(self, VPR.Twinfang);
                         return iconHook.Original(self, actionID);
                 }
+            }
+
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLegacyCombo))
+            {
+                if (JobGauges.Get<VPRGauge>().AnguineTribute > 0)
+                    switch (actionID)
+                    {
+                        case VPR.SteelFangs:
+                        case VPR.SteelMaw:
+                            // Pending update: if (JobGauges.Get<VPRGauge>().SerpentCombo == 1)
+                            if (iconHook.Original(self, VPR.SerpentsTail) == VPR.FirstLegacy)
+                                return VPR.FirstLegacy;
+                            return iconHook.Original(self, actionID);
+
+                        case VPR.DreadFangs:
+                        case VPR.DreadMaw:
+                            if (iconHook.Original(self, VPR.SerpentsTail) == VPR.SecondLegacy)
+                                return VPR.SecondLegacy;
+                            return iconHook.Original(self, actionID);
+
+                        case VPR.HuntersCoil:
+                        case VPR.HuntersDen:
+                            if (iconHook.Original(self, VPR.SerpentsTail) == VPR.ThirdLegacy)
+                                return VPR.ThirdLegacy;
+                            return iconHook.Original(self, actionID);
+
+                        case VPR.SwiftskinsCoil:
+                        case VPR.SwiftskinsDen:
+                            if (iconHook.Original(self, VPR.SerpentsTail) == VPR.FourthLegacy)
+                                return VPR.FourthLegacy;
+                            return iconHook.Original(self, actionID);
+                    }
             }
 
             return iconHook.Original(self, actionID);
