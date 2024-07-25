@@ -832,38 +832,37 @@ namespace XIVComboPlugin
             //VIPER
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLegacyCombo))
             {
-                // Pending update: if (JobGauges.Get<VPRGauge>().SerpentCombo == 1)
                 if (JobGauges.Get<VPRGauge>().AnguineTribute > 0)
+                {
+                    var gauge = JobGauges.Get<VPRGauge>();
                     switch (actionID)
                     {
                         case VPR.SteelFangs:
                         case VPR.SteelMaw:
-                            if (JobGauges.Get<VPRGauge>().AnguineTribute >= 4)
-                                if (iconHook.Original(self, VPR.SerpentsTail) == VPR.FirstLegacy)
+                            if ((int)gauge.SerpentCombo == 3)
                                 return VPR.FirstLegacy;
                             return iconHook.Original(self, actionID);
 
                         case VPR.DreadFangs:
                         case VPR.DreadMaw:
-                            if (JobGauges.Get<VPRGauge>().AnguineTribute >= 3)
+                            if ((int)gauge.SerpentCombo == 4)
                                 if (iconHook.Original(self, VPR.SerpentsTail) == VPR.SecondLegacy)
-                                return VPR.SecondLegacy;
+                                    return VPR.SecondLegacy;
                             return iconHook.Original(self, actionID);
 
                         case VPR.HuntersCoil:
                         case VPR.HuntersDen:
-                            if (JobGauges.Get<VPRGauge>().AnguineTribute >= 2)
-                                if (iconHook.Original(self, VPR.SerpentsTail) == VPR.ThirdLegacy)
+                            if ((int)gauge.SerpentCombo == 5)
                                 return VPR.ThirdLegacy;
                             return iconHook.Original(self, actionID);
 
                         case VPR.SwiftskinsCoil:
                         case VPR.SwiftskinsDen:
-                            if (JobGauges.Get<VPRGauge>().AnguineTribute >= 1)
-                                if (iconHook.Original(self, VPR.SerpentsTail) == VPR.FourthLegacy)
+                            if ((int)gauge.SerpentCombo == 6)
                                 return VPR.FourthLegacy;
                             return iconHook.Original(self, actionID);
                     }
+                }
             }
 
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperDeathLashCombo))
