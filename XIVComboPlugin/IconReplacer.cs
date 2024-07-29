@@ -867,11 +867,11 @@ namespace XIVComboPlugin
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperDeathLashCombo))
             {
                 if (actionID == VPR.SteelFangs || actionID == VPR.DreadFangs)
-                    if (iconHook.Original(self, VPR.SerpentsTail) == VPR.DeathRattle)
+                    if (JobGauges.Get<VPRGauge>().SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.DEATHRATTLE)
                         return VPR.DeathRattle;
 
                 if (actionID == VPR.DreadMaw || actionID == VPR.SteelMaw)
-                    if (iconHook.Original(self, VPR.SerpentsTail) == VPR.LastLash)
+                    if (JobGauges.Get<VPRGauge>().SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.LASTLASH)
                         return VPR.LastLash;
             }
 
