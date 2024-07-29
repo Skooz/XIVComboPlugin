@@ -465,10 +465,10 @@ namespace XIVComboPlugin
             // Change Play 1/2/3 to Astral/Umbral Draw if that Play action doesn't have a card ready to be played.
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.AstrologianCardsOnDrawFeature))
             {
-                if (actionID == AST.Play1 || actionID == AST.Play2 || actionID == AST.Play3)
+                if (actionID == AST.MinorArcana)
                 {
                     var x = iconHook.Original(self, actionID);
-                    if (x != AST.Play1 && x != AST.Play2 && x != AST.Play3) 
+                    if (x != AST.MinorArcana) 
                         return x;
                     return iconHook.Original(self, AST.AstralDraw);
                 }

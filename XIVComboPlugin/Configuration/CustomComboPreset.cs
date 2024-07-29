@@ -105,7 +105,7 @@ namespace XIVComboPlugin
         BlackEnochianFeature = 1L << 25,
 
         // ASTROLOGIAN
-        [CustomComboInfo("Astral/Umbral Draw on Play 1/2/3", "Play actions turn into Draw actions after playing a card, while keeping the the usual Play behavior", 33)]
+        [CustomComboInfo("Astral/Umbral Draw on Minor Arcana", "Draw replaces Minor Arcana when no Arcana is available", 33)]
         AstrologianCardsOnDrawFeature = 1L << 27,
 
         // SUMMONER

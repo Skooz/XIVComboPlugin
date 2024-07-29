@@ -14,7 +14,7 @@
             Spear = 4403,
             Ewer = 4405,
             Spire = 4406,
-            MinorArcana = 7443,
+            MinorArcana = 37022,
             CrownPlay = 25869;
         public const ushort
             BuffLordOfCrownsDrawn = 2054,
