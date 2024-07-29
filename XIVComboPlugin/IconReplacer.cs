@@ -468,7 +468,7 @@ namespace XIVComboPlugin
                 if (actionID == AST.MinorArcana)
                 {
                     var x = iconHook.Original(self, actionID);
-                    if (x != AST.MinorArcana) 
+                    if (x != AST.MinorArcana && level >= 70) 
                         return x;
                     return iconHook.Original(self, AST.AstralDraw);
                 }
