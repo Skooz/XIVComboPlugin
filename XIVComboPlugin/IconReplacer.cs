@@ -889,8 +889,6 @@ namespace XIVComboPlugin
                     }
                 }
 
-                PluginLog.Verbose("SerpentCombo: {SerpentMove}", JobGauges.Get<VPRGauge>().SerpentCombo);
-
                 switch (actionID)
                 {
                     case VPR.SwiftskinsCoil:
