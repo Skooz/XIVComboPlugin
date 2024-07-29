@@ -879,7 +879,7 @@ namespace XIVComboPlugin
             {
                 if (actionID == VPR.UncoiledFury)
                 {
-                    if (JobGauges.Get<VPRGauge>().RattlingCoilStacks > 0)
+                    if (((int)JobGauges.Get<VPRGauge>().SerpentCombo == 9))
                     {
                         if (SearchBuffArray(VPR.Buffs.PoisedForTwinfang))
                             return iconHook.Original(self, VPR.Twinfang);
@@ -889,25 +889,27 @@ namespace XIVComboPlugin
                     }
                 }
 
+                PluginLog.Verbose("SerpentCombo: {SerpentMove}", JobGauges.Get<VPRGauge>().SerpentCombo);
+
                 switch (actionID)
                 {
                     case VPR.SwiftskinsCoil:
-                        if (iconHook.Original(self, VPR.Twinblood) == VPR.TwinbloodBite)
+                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 7)
                             return iconHook.Original(self, VPR.Twinblood);
                         return iconHook.Original(self, actionID);
 
                     case VPR.HuntersCoil:
-                        if (iconHook.Original(self, VPR.Twinfang) == VPR.TwinfangBite)
+                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 7)
                             return iconHook.Original(self, VPR.Twinfang);
                         return iconHook.Original(self, actionID);
 
                     case VPR.SwiftskinsDen:
-                        if (iconHook.Original(self, VPR.Twinblood) == VPR.TwinbloodThresh)
+                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 8)
                             return iconHook.Original(self, VPR.Twinblood);
                         return iconHook.Original(self, actionID);
 
                     case VPR.HuntersDen:
-                        if (iconHook.Original(self, VPR.Twinfang) == VPR.TwinfangThresh)
+                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 8)
                             return iconHook.Original(self, VPR.Twinfang);
                         return iconHook.Original(self, actionID);
                 }
