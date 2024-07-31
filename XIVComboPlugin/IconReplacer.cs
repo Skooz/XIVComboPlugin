@@ -8,6 +8,7 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
+using SerpentCombo = Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo;
 
 namespace XIVComboPlugin
 {
@@ -133,7 +134,7 @@ namespace XIVComboPlugin
                 {
                     if ((lastMove == DRG.TrueThrust || lastMove == DRG.RaidenThrust) && level >= 18)
                         return iconHook.Original(self, DRG.Disembowel);
-                    if (lastMove == DRG.Disembowel && level >= 50)
+                    if ((lastMove == DRG.Disembowel || lastMove == DRG.SpiralBlow) && level >= 50)
                         return iconHook.Original(self, DRG.ChaosThrust);
                     if ((lastMove == DRG.ChaosThrust || lastMove == DRG.ChaoticSpring) && level >= 58)
                         return DRG.WheelingThrust;
@@ -148,7 +149,7 @@ namespace XIVComboPlugin
                 {
                     if ((lastMove == DRG.TrueThrust || lastMove == DRG.RaidenThrust) && level >= 4)
                         return iconHook.Original(self, DRG.VorpalThrust);
-                    if (lastMove == DRG.VorpalThrust && level >= 26)
+                    if ((lastMove == DRG.VorpalThrust || lastMove == DRG.LanceBarrage) && level >= 26)
                         return iconHook.Original(self, DRG.FullThrust);
                     if ((lastMove == DRG.FullThrust || lastMove == DRG.HeavensThrust) && level >= 56)
                         return DRG.FangAndClaw;
@@ -830,86 +831,48 @@ namespace XIVComboPlugin
             }
 
             //VIPER
-            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLegacyCombo))
-            {
-                if (JobGauges.Get<VPRGauge>().AnguineTribute > 0)
-                {
-                    var gauge = JobGauges.Get<VPRGauge>();
-                    switch (actionID)
-                    {
-                        case VPR.SteelFangs:
-                        case VPR.SteelMaw:
-                            if (gauge.SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.FIRSTLEGACY)
-                                return VPR.FirstLegacy;
-                            return iconHook.Original(self, actionID);
-
-                        case VPR.DreadFangs:
-                        case VPR.DreadMaw:
-                            if (gauge.SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.SECONDLEGACY)
-                                return VPR.SecondLegacy;
-                            return iconHook.Original(self, actionID);
-
-                        case VPR.HuntersCoil:
-                        case VPR.HuntersDen:
-                            if (gauge.SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.THIRDLEGACY)
-                                return VPR.ThirdLegacy;
-                            return iconHook.Original(self, actionID);
-
-                        case VPR.SwiftskinsCoil:
-                        case VPR.SwiftskinsDen:
-                            if (gauge.SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.FOURTHLEGACY)
-                                return VPR.FourthLegacy;
-                            return iconHook.Original(self, actionID);
-                    }
-                }
-            }
-
-            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperDeathLashCombo))
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperDeathRattleCombo))
             {
                 if (actionID == VPR.SteelFangs || actionID == VPR.DreadFangs)
-                    if (JobGauges.Get<VPRGauge>().SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.DEATHRATTLE)
-                        return VPR.DeathRattle;
-
-                if (actionID == VPR.DreadMaw || actionID == VPR.SteelMaw)
-                    if (JobGauges.Get<VPRGauge>().SerpentCombo == Dalamud.Game.ClientState.JobGauge.Enums.SerpentCombo.LASTLASH)
+                    if (JobGauges.Get<VPRGauge>().SerpentCombo == SerpentCombo.DEATHRATTLE)
                         return VPR.LastLash;
             }
 
-            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperTwinsCombo))
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLastLashCombo))
             {
-                if (actionID == VPR.UncoiledFury)
-                {
-                    if (((int)JobGauges.Get<VPRGauge>().SerpentCombo == 9))
-                    {
-                        if (SearchBuffArray(VPR.Buffs.PoisedForTwinfang))
-                            return iconHook.Original(self, VPR.Twinfang);
-                        if (SearchBuffArray(VPR.Buffs.PoisedForTwinblood))
-                            return iconHook.Original(self, VPR.Twinblood);
-                        return iconHook.Original(self, actionID);
-                    }
-                }
 
+                if (actionID == VPR.DreadMaw || actionID == VPR.SteelMaw)
+                    if (JobGauges.Get<VPRGauge>().SerpentCombo == SerpentCombo.LASTLASH)
+                        return VPR.LastLash;
+            }
+
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLegacyCombo))
+            {
                 switch (actionID)
                 {
-                    case VPR.SwiftskinsCoil:
-                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 7)
-                            return iconHook.Original(self, VPR.Twinblood);
-                        return iconHook.Original(self, actionID);
+                    case VPR.SteelFangs:
+                    case VPR.SteelMaw:
+                        if (JobGauges.Get<VPRGauge>().SerpentCombo == SerpentCombo.FIRSTLEGACY)
+                            return VPR.FirstLegacy;
+                        break;
+
+                    case VPR.DreadFangs:
+                    case VPR.DreadMaw:
+                        if (JobGauges.Get<VPRGauge>().SerpentCombo == SerpentCombo.SECONDLEGACY)
+                            return VPR.SecondLegacy;
+                        break;
 
                     case VPR.HuntersCoil:
-                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 7)
-                            return iconHook.Original(self, VPR.Twinfang);
-                        return iconHook.Original(self, actionID);
-
-                    case VPR.SwiftskinsDen:
-                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 8)
-                            return iconHook.Original(self, VPR.Twinblood);
-                        return iconHook.Original(self, actionID);
-
                     case VPR.HuntersDen:
-                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 8)
-                            return iconHook.Original(self, VPR.Twinfang);
-                        return iconHook.Original(self, actionID);
+                        if (JobGauges.Get<VPRGauge>().SerpentCombo == SerpentCombo.THIRDLEGACY)
+                            return VPR.ThirdLegacy;
+                        break;
+
+                    case VPR.SwiftskinsCoil:
+                    case VPR.SwiftskinsDen:
+                        if (JobGauges.Get<VPRGauge>().SerpentCombo == SerpentCombo.FOURTHLEGACY)
+                            return VPR.FourthLegacy;
+                        break;
                 }
             }
 
