@@ -248,15 +248,8 @@ namespace XIVComboPlugin
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.SamuraiTsubameCombo))
                 if (actionID == SAM.Iaijutsu)
                 {
-<<<<<<< Updated upstream
                     var x = iconHook.Original(self, SAM.Tsubame);
                     if (x != SAM.Tsubame) return x;
-=======
-                    var gauge = JobGauges.Get<SAMGauge>();
-                    PluginLog.Verbose("Kaeshi: {KaeshiCombo}", gauge.Kaeshi);
-                    if (gauge.Kaeshi != Kaeshi.NONE && gauge.Kaeshi != Kaeshi.NAMIKIRI)
-                        return iconHook.Original(self, SAM.Tsubame);
->>>>>>> Stashed changes
                     return iconHook.Original(self, actionID);
                 }
 
