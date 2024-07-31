@@ -874,7 +874,7 @@ namespace XIVComboPlugin
             {
                 if (actionID == VPR.UncoiledFury)
                 {
-                    if (((int)JobGauges.Get<VPRGauge>().SerpentCombo == 9))
+                    if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 9)
                     {
                         if (SearchBuffArray(VPR.Buffs.PoisedForTwinfang))
                             return iconHook.Original(self, VPR.Twinfang);
