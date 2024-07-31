@@ -831,19 +831,21 @@ namespace XIVComboPlugin
             }
 
             //VIPER
-            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperDeathRattleCombo))
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperDeathLashCombo))
             {
                 if (actionID == VPR.SteelFangs || actionID == VPR.DreadFangs)
                     if (JobGauges.Get<VPRGauge>().SerpentCombo == SerpentCombo.DEATHRATTLE)
+                        return VPR.DeathRattle;
+
+                if (actionID == VPR.DreadMaw || actionID == VPR.SteelMaw)
+                    if (JobGauges.Get<VPRGauge>().SerpentCombo == SerpentCombo.LASTLASH)
                         return VPR.LastLash;
             }
 
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLastLashCombo))
             {
 
-                if (actionID == VPR.DreadMaw || actionID == VPR.SteelMaw)
-                    if (JobGauges.Get<VPRGauge>().SerpentCombo == SerpentCombo.LASTLASH)
-                        return VPR.LastLash;
+                
             }
 
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLegacyCombo))
