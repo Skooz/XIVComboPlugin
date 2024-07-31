@@ -248,8 +248,15 @@ namespace XIVComboPlugin
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.SamuraiTsubameCombo))
                 if (actionID == SAM.Iaijutsu)
                 {
+<<<<<<< Updated upstream
                     var x = iconHook.Original(self, SAM.Tsubame);
                     if (x != SAM.Tsubame) return x;
+=======
+                    var gauge = JobGauges.Get<SAMGauge>();
+                    PluginLog.Verbose("Kaeshi: {KaeshiCombo}", gauge.Kaeshi);
+                    if (gauge.Kaeshi != Kaeshi.NONE && gauge.Kaeshi != Kaeshi.NAMIKIRI)
+                        return iconHook.Original(self, SAM.Tsubame);
+>>>>>>> Stashed changes
                     return iconHook.Original(self, actionID);
                 }
 
@@ -840,12 +847,6 @@ namespace XIVComboPlugin
                         return VPR.LastLash;
             }
 
-            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLastLashCombo))
-            {
-
-                
-            }
-
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperLegacyCombo))
             {
                 switch (actionID)
@@ -872,6 +873,44 @@ namespace XIVComboPlugin
                     case VPR.SwiftskinsDen:
                         if (JobGauges.Get<VPRGauge>().SerpentCombo == SerpentCombo.FOURTHLEGACY)
                             return VPR.FourthLegacy;
+                        break;
+                }
+            }
+
+            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperTwinsCombo))
+            {
+                if (actionID == VPR.UncoiledFury)
+                {
+                    if (((int)JobGauges.Get<VPRGauge>().SerpentCombo == 9))
+                    {
+                        if (SearchBuffArray(VPR.Buffs.PoisedForTwinfang))
+                            return iconHook.Original(self, VPR.Twinfang);
+                        if (SearchBuffArray(VPR.Buffs.PoisedForTwinblood))
+                            return iconHook.Original(self, VPR.Twinblood);
+                        return iconHook.Original(self, actionID);
+                    }
+                }
+
+                switch (actionID)
+                {
+                    case VPR.SwiftskinsCoil:
+                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 7)
+                            return iconHook.Original(self, VPR.Twinblood);
+                        break;
+
+                    case VPR.HuntersCoil:
+                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 7)
+                            return iconHook.Original(self, VPR.Twinfang);
+                        break;
+
+                    case VPR.SwiftskinsDen:
+                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 8)
+                            return iconHook.Original(self, VPR.Twinblood);
+                        break;
+
+                    case VPR.HuntersDen:
+                        if ((int)JobGauges.Get<VPRGauge>().SerpentCombo == 8)
+                            return iconHook.Original(self, VPR.Twinfang);
                         break;
                 }
             }
