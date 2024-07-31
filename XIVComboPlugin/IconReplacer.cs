@@ -245,13 +245,11 @@ namespace XIVComboPlugin
                 }
 
             // SAMURAI
-
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.SamuraiTsubameCombo))
                 if (actionID == SAM.Iaijutsu)
                 {
-                    var gauge = JobGauges.Get<SAMGauge>();
-                    if (gauge.Kaeshi != Kaeshi.NONE && gauge.Kaeshi != Kaeshi.NAMIKIRI)
-                        return iconHook.Original(self, SAM.Tsubame);
+                    var x = iconHook.Original(self, SAM.Tsubame);
+                    if (x != SAM.Tsubame) return x;
                     return iconHook.Original(self, actionID);
                 }
 
