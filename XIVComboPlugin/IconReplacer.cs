@@ -483,7 +483,7 @@ namespace XIVComboPlugin
                 {
                     if (!JobGauges.Get<SMNGauge>().HasAetherflowStacks)
                         return SMN.EnergyDrain;
-                    return iconHook.Original(self, SMN.Fester);
+                    return iconHook.Original(self, actionID);
                 }
 
             //Change Painflare into Energy Syphon
