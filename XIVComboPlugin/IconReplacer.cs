@@ -248,8 +248,11 @@ namespace XIVComboPlugin
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.SamuraiTsubameCombo))
                 if (actionID == SAM.Iaijutsu)
                 {
-                    var x = iconHook.Original(self, SAM.Tsubame);
-                    if (x != SAM.Tsubame) return x;
+                    if (SearchBuffArray(SAM.BuffTsubameReady) ||
+                        SearchBuffArray(SAM.BuffTsubame1) ||
+                        SearchBuffArray(SAM.BuffTsubame2) ||
+                        SearchBuffArray(SAM.BuffTsubame3))
+                        return iconHook.Original(self, SAM.Tsubame);
                     return iconHook.Original(self, actionID);
                 }
 
@@ -795,39 +798,37 @@ namespace XIVComboPlugin
                 }
             }
 
-            if (Configuration.ComboPresets.HasFlag(CustomComboPreset.PictoMotifMuseFeature))
+            bool pictoMuseEnabled = Configuration.ComboPresets.HasFlag(CustomComboPreset.PictoMotifMuseFeature);
+            bool pictoFollowUpEnabled = Configuration.ComboPresets.HasFlag(CustomComboPreset.PictoMuseCombo);
+
+            if (actionID == PCT.CreatureMotif)
             {
-                if (actionID == PCT.CreatureMotif)
-                {
-                    var PCTGauge = JobGauges.Get<PCTGauge>();
-                    if (PCTGauge.CreatureMotifDrawn)
-                        return iconHook.Original(self, PCT.LivingMuse);
-                    return iconHook.Original(self, actionID);
-                }
-
-                if (actionID == PCT.WeaponMotif)
-                {
-                    var PCTGauge = JobGauges.Get<PCTGauge>();
-                    if (PCTGauge.WeaponMotifDrawn)
-                        return iconHook.Original(self, PCT.SteelMuse);
-                    if (Configuration.ComboPresets.HasFlag(CustomComboPreset.PictoMuseCombo))
-                        if (SearchBuffArray(PCT.HammerReady))
-                            return iconHook.Original(self, PCT.HammerStamp);
-                    return iconHook.Original(self, actionID);
-                }
-
-                if (actionID == PCT.LandscapeMotif)
-                {
-                    var PCTGauge = JobGauges.Get<PCTGauge>();
-                    if (PCTGauge.LandscapeMotifDrawn)
-                        return PCT.StarryMuse;
-                    if (Configuration.ComboPresets.HasFlag(CustomComboPreset.PictoMuseCombo))
-                        if (SearchBuffArray(PCT.StarStruck))
-                            return PCT.StarPrism;
-                    return PCT.StarryMotif;
-                }
+                var PCTGauge = JobGauges.Get<PCTGauge>();
+                if (pictoMuseEnabled && PCTGauge.CreatureMotifDrawn)
+                    return iconHook.Original(self, PCT.LivingMuse);
+                return iconHook.Original(self, actionID);
             }
 
+            if (actionID == PCT.WeaponMotif)
+            {
+                var PCTGauge = JobGauges.Get<PCTGauge>();
+                if (pictoMuseEnabled && PCTGauge.WeaponMotifDrawn)
+                    return iconHook.Original(self, PCT.SteelMuse);
+                if (pictoFollowUpEnabled && SearchBuffArray(PCT.HammerReady))
+                    return iconHook.Original(self, PCT.HammerStamp);
+                return iconHook.Original(self, actionID);
+            }
+
+            if (actionID == PCT.LandscapeMotif)
+            {
+                var PCTGauge = JobGauges.Get<PCTGauge>();
+                if (pictoMuseEnabled && PCTGauge.LandscapeMotifDrawn)
+                    return PCT.StarryMuse;
+                if (pictoFollowUpEnabled && SearchBuffArray(PCT.StarStruck))
+                    return PCT.StarPrism;
+                return PCT.StarryMotif;
+            }
+            
             //VIPER
             if (Configuration.ComboPresets.HasFlag(CustomComboPreset.ViperDeathLashCombo))
             {
