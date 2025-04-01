@@ -1,5 +1,4 @@
 # XIVComboTweaks
-This is a forked version of Attick's XIVCombo plugin. Primarily bug fixes to keep up with patches, alongside some experimental features. 
+Discontinued/Deprecated! XIVCombo is now being actively maintained by https://github.com/MKhayle/
 
-## Installation
-Add ```https://raw.githubusercontent.com/Skooz/Zookins/main/pluginmaster.json``` to your list of custom plugin repositories.
+This was a forked version of Attick's XIVCombo plugin to keep up with patches, with some little features of my own making. 
